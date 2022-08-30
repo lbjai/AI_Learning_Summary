@@ -48,6 +48,16 @@ from typing import List
 
 class Solution:
     def removeDuplicates(self, nums: List[int]) -> int:
+        length = 1
+        w = len(nums)
+        for i in range(w):
+            if i < w - 1:
+                if nums[i + 1] != nums[i]:
+                    nums[length] = nums[i + 1]
+                    length += 1
+        return length
+
+    def removeDuplicates_v1(self, nums: List[int]) -> int:
         j = 0
         print(nums)
         for i in range(len(nums)):
@@ -57,6 +67,7 @@ class Solution:
         print(nums)
         return j + 1
 
-nums = [0,0,1,1,1,2,2,3,3,4]
+
+nums = [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]
 s = Solution()
 print(s.removeDuplicates(nums))
