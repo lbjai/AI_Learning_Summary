@@ -61,6 +61,7 @@ class Solution:
         j = 0
         print(nums)
         for i in range(len(nums)):
+            # 找到下标i与下表j元素值不相同的元素，将下标i的元素值复制给下标j+1
             if nums[i] != nums[j]:
                 j += 1
                 nums[j] = nums[i]
