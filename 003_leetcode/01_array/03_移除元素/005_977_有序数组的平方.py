@@ -39,7 +39,7 @@ class Solution:
         时间复杂度：O(n)O(n)，其中 nn 是数组 \textit{nums}nums 的长度。
         空间复杂度：O(1)O(1)。除了存储答案的数组以外，我们只需要维护常量空间。
         :param nums:
-        :return: 
+        :return:
         """
         n = len(nums)
         ans = [-1] * n
@@ -57,26 +57,15 @@ class Solution:
         return ans
 
     def sortedSquares_v1(self, nums: List[int]) -> List[int]:
+        """
+        这个时间复杂度是 O(n + nlogn)， 可以说是O(nlogn)的时间复杂度，
+        但为了和下面双指针法算法时间复杂度有鲜明对比，我记为 O(n + nlog n)
+        :param nums:
+        :return:
+        """
         return sorted(list(map(lambda x: x * x, nums)))
 
 
 nums = [-4, -1, 0, 3, 10]
 s = Solution()
 print(s.sortedSquares(nums))
-"""
-def sortedSquares(self, nums: List[int]) -> List[int]:
-        n = len(nums)
-        i, j, k = 0, n-1, n-1
-        ans = [-1] * n
-        while i <= j:
-            lm = nums[i] * nums[i]
-            rm = nums[j] * nums[j]
-            if lm > rm:
-                ans[k] = lm
-                i += 1
-            else:
-                ans[k] = rm
-                j -= 1
-            k -= 1
-        return ans
-"""
