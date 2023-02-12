@@ -1,0 +1,311 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Python自省机制 \n",
+    "\n",
+    "\n",
+    "### 1.什么是内省？\n",
+    "在日常生活中，自省是自我检查的行为。 内省是指对自己的思想，感觉，动机和行为的检查。 \n",
+    "\n",
+    "在计算机程序设计中，自省是指**检查某事物以确定它是什么，它知道什么以及它能够做什么的能力**。有时也叫类型内省，是在运行时进行的一种对象检测机制。我们可以通过内省来获取一个对象的所有信息，比如这个对象的类型，其中包含哪些属性等等。\n",
+    "\n",
+    "本文介绍了Python编程语言的自省功能。 Python对自省的支持在整个语言中广泛深入。 实际上，很难想象没有Python的自省功能。\n",
+    "\n",
+    "\n",
+    "Python 实现自省功能的主要函数（方法）是 `dir()`、`type()`、`isinstance()`、`inspect模块`等"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "['__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__']\n"
+     ]
+    }
+   ],
+   "source": [
+    "class A(object):\n",
+    "    pass\n",
+    "\n",
+    "class B(A):\n",
+    "    \"\"\"\n",
+    "    我是B，我继承A\n",
+    "    \"\"\"\n",
+    "    pass"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 2. dir() 函数\n",
+    "dir()是内省机制中的一个重要内置函数。这个函数可以将一个对象的所有属性以字符串列表的形式返回。"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "dir 函数: ['__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__']\n",
+      "B对象   : {'__module__': '__main__', '__doc__': '\\n    我是B，我继承A\\n    '}\n",
+      "b对象   : {}\n"
+     ]
+    }
+   ],
+   "source": [
+    "b = B()\n",
+    "print(\"dir 函数:\", dir(b))\n",
+    "print(\"B对象   :\", B.__dict__)\n",
+    "print(\"b对象   :\", b.__dict__)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "{}"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "b.__dict__"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 3.类型检查\n",
+    "\n",
+    "`isinstance()` 函数来判断一个对象是否是一个已知的类型，类似 `type()`。           \n",
+    "\n",
+    "`isinstance()` 与 `type()` 区别：\n",
+    "- type() 不会认为子类是一种父类类型，不考虑继承关系。\n",
+    "- isinstance() 会认为子类是一种父类类型，考虑继承关系。            \n",
+    "\n",
+    "如果要判断两个类型是否相同推荐使用 `isinstance()`。\n",
+    "\n",
+    "\n",
+    "`issubclass()` 方法用于判断参数 `class` 是否是类型参数 `classinfo` 的子类。"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "B对象   : <class 'type'>\n",
+      "b对象   : <class '__main__.B'>\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(\"B对象:\", type(B))\n",
+    "print(\"b对象:\", type(b))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "B对象: <class 'type'>\n",
+      "b对象: <class '__main__.B'>\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(\"B对象:\", B.__class__)\n",
+    "print(\"b对象:\", b.__class__)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "False\n",
+      "True\n",
+      "False\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(isinstance(B,A))\n",
+    "print(isinstance(B(),A))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "True\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(issubclass(B,A))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 4.inspect模块\n",
+    "\n",
+    "inspect模块提供了几个有用的函数来获取有关对象的信息。例如，可以来检查对象的成员：\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[('__class__', <class 'type'>), ('__delattr__', <slot wrapper '__delattr__' of 'object' objects>), ('__dict__', mappingproxy({'__module__': '__main__', '__dict__': <attribute '__dict__' of 'A' objects>, '__weakref__': <attribute '__weakref__' of 'A' objects>, '__doc__': None})), ('__dir__', <method '__dir__' of 'object' objects>), ('__doc__', None), ('__eq__', <slot wrapper '__eq__' of 'object' objects>), ('__format__', <method '__format__' of 'object' objects>), ('__ge__', <slot wrapper '__ge__' of 'object' objects>), ('__getattribute__', <slot wrapper '__getattribute__' of 'object' objects>), ('__gt__', <slot wrapper '__gt__' of 'object' objects>), ('__hash__', <slot wrapper '__hash__' of 'object' objects>), ('__init__', <slot wrapper '__init__' of 'object' objects>), ('__init_subclass__', <built-in method __init_subclass__ of type object at 0x7fca6f576f68>), ('__le__', <slot wrapper '__le__' of 'object' objects>), ('__lt__', <slot wrapper '__lt__' of 'object' objects>), ('__module__', '__main__'), ('__ne__', <slot wrapper '__ne__' of 'object' objects>), ('__new__', <built-in method __new__ of type object at 0x106fc36f0>), ('__reduce__', <method '__reduce__' of 'object' objects>), ('__reduce_ex__', <method '__reduce_ex__' of 'object' objects>), ('__repr__', <slot wrapper '__repr__' of 'object' objects>), ('__setattr__', <slot wrapper '__setattr__' of 'object' objects>), ('__sizeof__', <method '__sizeof__' of 'object' objects>), ('__str__', <slot wrapper '__str__' of 'object' objects>), ('__subclasshook__', <built-in method __subclasshook__ of type object at 0x7fca6f576f68>), ('__weakref__', <attribute '__weakref__' of 'A' objects>)]\n"
+     ]
+    }
+   ],
+   "source": [
+    "import inspect\n",
+    "print(inspect.getmembers(A))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "利用 inspect 模块实现一个检测一个对象是类还是函数的功能"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "my_function is a function\n",
+      "hello\n",
+      "==============================\n",
+      "MyClass is a class\n",
+      "world\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "<__main__.MyClass at 0x109d4ca20>"
+      ]
+     },
+     "execution_count": 29,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import inspect\n",
+    "from functools import wraps\n",
+    "\n",
+    "\n",
+    "def who_am_i(decorated):\n",
+    "    \n",
+    "    @wraps(decorated)\n",
+    "    def wrapper(*args, **kwargs):\n",
+    "        if inspect.isclass(decorated):\n",
+    "            print(f\"{decorated.__name__} is a class\")\n",
+    "            return decorated(*args, **kwargs)\n",
+    "        if inspect.isfunction(decorated):\n",
+    "            print(f\"{decorated.__name__} is a function\")\n",
+    "            return decorated(*args, **kwargs)\n",
+    "    return wrapper\n",
+    "\n",
+    "@who_am_i\n",
+    "def my_function():\n",
+    "    print('hello')\n",
+    "    \n",
+    "@who_am_i\n",
+    "class MyClass(object):\n",
+    "    def __init__(self):\n",
+    "        print('world')\n",
+    "        \n",
+    "        \n",
+    "my_function()\n",
+    "print(\"=\"*30)\n",
+    "MyClass()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
